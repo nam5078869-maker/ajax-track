@@ -1,0 +1,192 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, "Apple SD Gothic Neo", sans-serif;
+  background: #0f0f0f;
+  color: #f0f0f0;
+  line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* 상단 메뉴 */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid #2a2a2a;
+}
+.logo { font-weight: 900; font-size: 20px; letter-spacing: 2px; }
+.navbar nav a { margin-left: 24px; color: #aaa; }
+.navbar nav a:hover { color: #fff; }
+
+/* 메인 배너 */
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+}
+.hero h1 { font-size: 40px; margin-bottom: 16px; }
+.hero p  { color: #aaa; margin-bottom: 32px; }
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #e63946;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 999px;
+}
+.btn:hover { background: #f25c68; }
+
+/* 진행 방식 */
+.steps { max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; }
+.steps h2 { margin-bottom: 24px; }
+.step-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.step {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 24px;
+}
+.num { color: #e63946; font-weight: 900; }
+.step h3 { margin: 8px 0; }
+.step p  { color: #aaa; font-size: 14px; }
+
+footer {
+  text-align: center;
+  padding: 24px;
+  color: #666;
+  border-top: 1px solid #2a2a2a;
+}
+
+/* ===== 공통: 현재 메뉴 표시 ===== */
+.navbar nav a.active { color: #e63946; }
+
+/* ===== 공통: 서브 페이지 레이아웃 ===== */
+.page { max-width: 1000px; margin: 0 auto; padding: 48px 20px 80px; }
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.page-head h1 { font-size: 32px; }
+.page-head p  { color: #aaa; }
+.meta { color: #888; font-size: 13px; }
+
+/* ===== 비트 게시판 ===== */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.chip {
+  background: #1a1a1a;
+  color: #ccc;
+  border: 1px solid #333;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.chip:hover { border-color: #666; }
+.chip.selected { background: #e63946; color: #fff; border-color: #e63946; font-weight: 700; }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.card:hover { border-color: #e63946; transform: translateY(-2px); }
+.card.closed { opacity: 0.5; }
+.card.closed:hover { border-color: #2a2a2a; transform: none; }
+.card-top { display: flex; justify-content: space-between; align-items: center; }
+.tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e63946;
+  border: 1px solid #e63946;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+.bpm { font-size: 12px; color: #888; }
+.card .desc { color: #bbb; font-size: 14px; flex: 1; }
+.need { display: flex; gap: 6px; align-items: center; font-size: 13px; color: #888; }
+.pos { background: #2a2a2a; color: #fff; border-radius: 4px; padding: 2px 8px; }
+.btn-outline {
+  margin-top: 8px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-outline:hover { background: #e63946; color: #fff; border-color: #e63946; }
+.btn-outline:disabled { cursor: not-allowed; background: transparent; color: #666; border-color: #333; }
+
+/* ===== 팀 현황 ===== */
+.team-list { display: flex; flex-direction: column; gap: 16px; }
+.team {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 24px;
+}
+.team-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.status {
+  font-size: 13px;
+  font-weight: 700;
+  background: #2a2a2a;
+  color: #e63946;
+  border-radius: 999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+.status.finished { background: #e63946; color: #fff; }
+
+.members { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.member { background: #262626; border-radius: 999px; padding: 4px 12px; font-size: 14px; }
+.member small { color: #888; margin-left: 4px; }
+.member.mentor { border: 1px solid #e63946; }
+.member.empty { background: transparent; border: 1px dashed #555; color: #888; }
+
+/* 진행 단계 바 */
+.progress {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  list-style: none;
+  gap: 6px;
+}
+.progress li {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  padding-top: 10px;
+  border-top: 4px solid #333;
+}
+.progress li.done    { color: #ccc; border-top-color: #e63946; }
+.progress li.current { color: #e63946; font-weight: 700; border-top-color: #e63946; }
+
+/* 좁은 화면 */
+@media (max-width: 600px) {
+  .navbar { padding: 16px 20px; }
+  .hero h1 { font-size: 28px; }
+}

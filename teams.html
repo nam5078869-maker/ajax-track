@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>팀 현황 | AJAX 트랙 매칭</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <a href="index.html" class="logo">AJAX TRACK</a>
+    <nav>
+      <a href="beats.html">비트 게시판</a>
+      <a href="teams.html" class="active">팀 현황</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <h1>팀 현황</h1>
+        <p>각 팀이 어느 단계까지 왔는지 한눈에 확인하세요.</p>
+      </div>
+    </div>
+
+    <div class="team-list">
+      <!-- data-stage: 1 가사 작업 / 2 녹음 예약 / 3 믹싱 / 4 완성 -->
+      <article class="team">
+        <div class="team-head">
+          <div>
+            <h3>Cold Street</h3>
+            <p class="meta">드릴 · 144 BPM · 목표 무대: 축제</p>
+          </div>
+          <span class="status">믹싱 중</span>
+        </div>
+        <div class="members">
+          <span class="member">비트메이커D <small>비트</small></span>
+          <span class="member">래퍼E <small>랩</small></span>
+          <span class="member">래퍼F <small>랩</small></span>
+          <span class="member mentor">멘토G <small>녹음</small></span>
+        </div>
+        <ol class="progress">
+          <li class="done">가사 작업</li>
+          <li class="done">녹음</li>
+          <li class="current">믹싱</li>
+          <li>완성</li>
+        </ol>
+      </article>
+
+      <article class="team">
+        <div class="team-head">
+          <div>
+            <h3>Money Back</h3>
+            <p class="meta">트랩 · 140 BPM · 목표 무대: 축제</p>
+          </div>
+          <span class="status">가사 작업 중</span>
+        </div>
+        <div class="members">
+          <span class="member">비트메이커B <small>비트</small></span>
+          <span class="member">래퍼H <small>랩</small></span>
+          <span class="member empty">모집 중 <small>보컬</small></span>
+        </div>
+        <ol class="progress">
+          <li class="current">가사 작업</li>
+          <li>녹음</li>
+          <li>믹싱</li>
+          <li>완성</li>
+        </ol>
+      </article>
+
+      <article class="team">
+        <div class="team-head">
+          <div>
+            <h3>First Light</h3>
+            <p class="meta">붐뱁 · 88 BPM · 목표 무대: 정기공연</p>
+          </div>
+          <span class="status finished">완성</span>
+        </div>
+        <div class="members">
+          <span class="member">비트메이커I <small>비트</small></span>
+          <span class="member">래퍼J <small>랩</small></span>
+          <span class="member mentor">멘토G <small>녹음</small></span>
+        </div>
+        <ol class="progress">
+          <li class="done">가사 작업</li>
+          <li class="done">녹음</li>
+          <li class="done">믹싱</li>
+          <li class="done">완성</li>
+        </ol>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AJAX Hip-hop Club</p>
+  </footer>
+</body>
+</html>

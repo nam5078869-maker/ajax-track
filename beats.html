@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>비트 게시판 | AJAX 트랙 매칭</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <a href="index.html" class="logo">AJAX TRACK</a>
+    <nav>
+      <a href="beats.html" class="active">비트 게시판</a>
+      <a href="teams.html">팀 현황</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <h1>비트 게시판</h1>
+        <p>같이 작업할 비트를 고르고 참여 신청을 보내세요.</p>
+      </div>
+      <a href="#" class="btn">+ 비트 올리기</a>
+    </div>
+
+    <!-- 장르 필터 (4단계에서 JavaScript로 동작하게 만들 예정) -->
+    <div class="filters">
+      <button class="chip selected">전체</button>
+      <button class="chip">붐뱁</button>
+      <button class="chip">트랩</button>
+      <button class="chip">R&amp;B</button>
+      <button class="chip">드릴</button>
+    </div>
+
+    <div class="card-grid">
+      <article class="card">
+        <div class="card-top">
+          <span class="tag">붐뱁</span>
+          <span class="bpm">92 BPM</span>
+        </div>
+        <h3>Midnight Seoul</h3>
+        <p class="meta">프로듀서 · 비트메이커A</p>
+        <p class="desc">올드스쿨 느낌의 샘플 비트예요. 16마디 두 벌스 채울 래퍼 구해요.</p>
+        <div class="need">
+          <span>모집</span>
+          <span class="pos">랩 2</span>
+        </div>
+        <button class="btn-outline">참여 신청</button>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="tag">트랩</span>
+          <span class="bpm">140 BPM</span>
+        </div>
+        <h3>Money Back</h3>
+        <p class="meta">프로듀서 · 비트메이커B</p>
+        <p class="desc">축제 무대용 신나는 트랩 비트. 훅 불러줄 보컬 환영!</p>
+        <div class="need">
+          <span>모집</span>
+          <span class="pos">랩 1</span>
+          <span class="pos">보컬 1</span>
+        </div>
+        <button class="btn-outline">참여 신청</button>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="tag">R&amp;B</span>
+          <span class="bpm">78 BPM</span>
+        </div>
+        <h3>Late Night Talk</h3>
+        <p class="meta">프로듀서 · 비트메이커C</p>
+        <p class="desc">감성 R&amp;B 비트입니다. 정기공연 무대 목표로 작업해요.</p>
+        <div class="need">
+          <span>모집</span>
+          <span class="pos">보컬 1</span>
+        </div>
+        <button class="btn-outline">참여 신청</button>
+      </article>
+
+      <article class="card closed">
+        <div class="card-top">
+          <span class="tag">드릴</span>
+          <span class="bpm">144 BPM</span>
+        </div>
+        <h3>Cold Street</h3>
+        <p class="meta">프로듀서 · 비트메이커D</p>
+        <p class="desc">모집이 완료된 비트예요. 팀 현황에서 진행 상황을 볼 수 있어요.</p>
+        <div class="need">
+          <span>모집 완료</span>
+        </div>
+        <button class="btn-outline" disabled>마감</button>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AJAX Hip-hop Club</p>
+  </footer>
+</body>
+</html>
