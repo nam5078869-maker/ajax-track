@@ -5,21 +5,29 @@ import { isRecruiting } from '../utils'
 import { useAuth } from '../auth'
 import BeatCard from '../components/BeatCard'
 import ApplyModal from '../components/ApplyModal'
+import ConfirmModal from '../components/ConfirmModal'
 
 const GENRES: (Genre | '전체')[] = ['전체', '붐뱁', '트랩', 'R&B', '드릴']
 
 interface Props {
   projects: Project[]
   onApply: (projectId: number, position: Position) => Promise<void>
+  onDelete: (projectId: number) => Promise<void>
 }
 
-export default function Beats({ projects, onApply }: Props) {
+export default function Beats({ projects, onApply, onDelete }: Props) {
   const { user } = useAuth()
   const navigate = useNavigate()
 
   const [genre, setGenre] = useState<Genre | '전체'>('전체')
   const [applying, setApplying] = useState<Project | null>(null) // 신청 창을 띄운 비트
+  const [deleting, setDeleting] = useState<Project | null>(null) // 삭제 확인 창
   const [toast, setToast] = useState('')
+
+  function showToast(message: string) {
+    setToast(message)
+    setTimeout(() => setToast(''), 2500)
+  }
 
   const visible = projects
     .filter((p) => genre === '전체' || p.genre === genre)
@@ -36,9 +44,15 @@ export default function Beats({ projects, onApply }: Props) {
   async function handleSubmit(position: Position) {
     if (!applying) return
     await onApply(applying.id, position)
-    setToast(`'${applying.title}' 팀에 ${position}(으)로 합류했어요!`)
+    showToast(`'${applying.title}' 팀에 ${position}(으)로 합류했어요!`)
     setApplying(null)
-    setTimeout(() => setToast(''), 2500)
+  }
+
+  async function handleDelete() {
+    if (!deleting) return
+    await onDelete(deleting.id)
+    showToast(`'${deleting.title}' 모집글을 삭제했어요.`)
+    setDeleting(null)
   }
 
   return (
@@ -81,6 +95,7 @@ export default function Beats({ projects, onApply }: Props) {
               project={p}
               isMine={user !== null && user.id === p.ownerId}
               onApply={handleApplyClick}
+              onDelete={setDeleting}
             />
           ))}
         </div>
@@ -91,6 +106,16 @@ export default function Beats({ projects, onApply }: Props) {
           project={applying}
           onClose={() => setApplying(null)}
           onSubmit={handleSubmit}
+        />
+      )}
+
+      {deleting && (
+        <ConfirmModal
+          title="모집글을 삭제할까요?"
+          message={`'${deleting.title}'의 참여 신청 기록도 함께 사라지고, 되돌릴 수 없어요.`}
+          confirmLabel="삭제하기"
+          onClose={() => setDeleting(null)}
+          onConfirm={handleDelete}
         />
       )}
 

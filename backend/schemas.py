@@ -37,9 +37,14 @@ class UserRead(CamelModel):
 
 
 class TokenRead(CamelModel):
-    """로그인·회원가입 성공 시 돌려주는 값 (출입증 + 내 정보)"""
+    """로그인·회원가입 성공 시 돌려주는 값 (출입증 + 내 정보)
+
+    recovery_code는 회원가입·비밀번호 재설정 때만 값이 들어가요.
+    이때 한 번만 보여주고 서버에는 해시만 남습니다.
+    """
     access_token: str
     user: UserRead
+    recovery_code: str | None = None
 
 
 class ProjectRead(CamelModel):
@@ -65,6 +70,17 @@ class SignupRequest(CamelModel):
 class LoginRequest(CamelModel):
     username: str
     password: str
+
+
+class ResetPasswordRequest(CamelModel):
+    username: str
+    recovery_code: str
+    new_password: str = Field(min_length=8, max_length=64)
+
+
+class ChangePasswordRequest(CamelModel):
+    current_password: str
+    new_password: str = Field(min_length=8, max_length=64)
 
 
 class MemberCreate(CamelModel):

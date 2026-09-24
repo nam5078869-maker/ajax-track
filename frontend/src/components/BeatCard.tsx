@@ -5,9 +5,10 @@ interface Props {
   project: Project
   isMine: boolean // 내가 올린 비트인지
   onApply: (project: Project) => void
+  onDelete: (project: Project) => void
 }
 
-export default function BeatCard({ project, isMine, onApply }: Props) {
+export default function BeatCard({ project, isMine, onApply, onDelete }: Props) {
   const recruiting = isRecruiting(project)
 
   return (
@@ -38,13 +39,21 @@ export default function BeatCard({ project, isMine, onApply }: Props) {
         )}
       </div>
 
-      <button
-        className="btn-outline"
-        disabled={!recruiting}
-        onClick={() => onApply(project)}
-      >
-        {recruiting ? '참여 신청' : '마감'}
-      </button>
+      <div className="card-actions">
+        <button
+          className="btn-outline"
+          disabled={!recruiting}
+          onClick={() => onApply(project)}
+        >
+          {recruiting ? '참여 신청' : '마감'}
+        </button>
+        {/* 글쓴이 본인에게만 보이는 삭제 버튼 */}
+        {isMine && (
+          <button className="btn-outline delete" onClick={() => onDelete(project)}>
+            삭제
+          </button>
+        )}
+      </div>
     </article>
   )
 }

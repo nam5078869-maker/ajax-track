@@ -10,7 +10,9 @@ interface AuthValue {
   user: User | null
   ready: boolean // 저장된 토큰 확인이 끝났는지
   login: (username: string, password: string) => Promise<void>
-  signup: (username: string, password: string) => Promise<void>
+  // 회원가입·재설정은 복구 코드를 돌려줘요 (화면에서 한 번 보여주기 위해)
+  signup: (username: string, password: string) => Promise<string | null>
+  resetPassword: (username: string, code: string, newPassword: string) => Promise<string | null>
   logout: () => void
 }
 
@@ -43,6 +45,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const res = await api.signup(username, password)
     api.setToken(res.accessToken)
     setUser(res.user)
+    return res.recoveryCode ?? null
+  }
+
+  async function resetPassword(username: string, code: string, newPassword: string) {
+    const res = await api.resetPassword(username, code, newPassword)
+    api.setToken(res.accessToken)
+    setUser(res.user)
+    return res.recoveryCode ?? null
   }
 
   function logout() {
@@ -51,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, ready, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, ready, login, signup, resetPassword, logout }}>
       {children}
     </AuthContext.Provider>
   )

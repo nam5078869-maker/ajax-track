@@ -6,6 +6,7 @@
 import os
 from pathlib import Path
 
+from sqlalchemy import inspect, text
 from sqlmodel import Session, SQLModel, create_engine
 
 DB_PATH = Path(__file__).parent / "ajax_track.db"
@@ -31,6 +32,27 @@ engine = create_engine(
 def create_db() -> None:
     """models.py에 정의한 테이블이 없으면 만든다."""
     SQLModel.metadata.create_all(engine)
+    _add_missing_columns()
+
+
+# 이미 데이터가 들어 있는 DB에는 create_all이 "새 컬럼"을 더해 주지 않아요.
+# 그래서 없는 컬럼만 골라 직접 추가합니다. (여러 번 실행해도 안전)
+NEW_COLUMNS = {
+    "user": {"recovery_code_hash": "VARCHAR"},
+}
+
+
+def _add_missing_columns() -> None:
+    inspector = inspect(engine)
+    for table, columns in NEW_COLUMNS.items():
+        if table not in inspector.get_table_names():
+            continue
+        existing = {c["name"] for c in inspector.get_columns(table)}
+        for name, col_type in columns.items():
+            if name in existing:
+                continue
+            with engine.begin() as conn:
+                conn.execute(text(f'ALTER TABLE "{table}" ADD COLUMN {name} {col_type}'))
 
 
 def get_session():

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import type { Position, Project } from './types'
 import type { NewBeatInput } from './api'
-import { createProject, fetchProjects, joinProject, updateStage } from './api'
+import { createProject, deleteProject, fetchProjects, joinProject, updateStage } from './api'
 import { AuthProvider, useAuth } from './auth'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
@@ -40,6 +40,11 @@ function AppRoutes() {
     replaceProject(await updateStage(projectId, stage))
   }
 
+  async function removeProject(projectId: number) {
+    await deleteProject(projectId)
+    setProjects((prev) => prev.filter((p) => p.id !== projectId))
+  }
+
   async function addProject(input: NewBeatInput) {
     const created = await createProject(input)
     setProjects((prev) => [...prev, created])
@@ -56,7 +61,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/beats" element={<Beats projects={projects} onApply={applyToProject} />} />
+      <Route path="/beats" element={<Beats projects={projects} onApply={applyToProject} onDelete={removeProject} />} />
       <Route path="/teams" element={<Teams projects={projects} onAdvance={advanceStage} />} />
       <Route path="/login" element={user ? <Navigate to="/beats" replace /> : <Login />} />
       {/* 로그인하지 않은 사람이 주소를 직접 쳐서 들어와도 로그인 화면으로 보내요 */}

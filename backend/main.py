@@ -10,14 +10,23 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select
 
-from auth import create_token, get_current_user, hash_password, verify_password
+from auth import (
+    create_recovery_code,
+    create_token,
+    get_current_user,
+    hash_password,
+    normalize_code,
+    verify_password,
+)
 from database import create_db, engine, get_session
 from models import Member, Project, User
 from schemas import (
+    ChangePasswordRequest,
     LoginRequest,
     MemberCreate,
     ProjectCreate,
     ProjectRead,
+    ResetPasswordRequest,
     SignupRequest,
     StageUpdate,
     TokenRead,
@@ -74,11 +83,21 @@ def signup(body: SignupRequest, session: Session = Depends(get_session)):
     if exists is not None:
         raise HTTPException(status_code=409, detail="이미 사용 중인 닉네임이에요.")
 
-    user = User(username=username, password_hash=hash_password(body.password))
+    # 복구 코드는 이 순간 딱 한 번만 보여주고, DB에는 해시만 저장해요.
+    recovery_code = create_recovery_code()
+    user = User(
+        username=username,
+        password_hash=hash_password(body.password),
+        recovery_code_hash=hash_password(recovery_code),
+    )
     session.add(user)
     session.commit()
     session.refresh(user)
-    return TokenRead(access_token=create_token(user.id), user=UserRead.model_validate(user))
+    return TokenRead(
+        access_token=create_token(user.id),
+        user=UserRead.model_validate(user),
+        recovery_code=recovery_code,
+    )
 
 
 @app.post("/api/auth/login", response_model=TokenRead)
@@ -88,6 +107,52 @@ def login(body: LoginRequest, session: Session = Depends(get_session)):
     if user is None or not verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="닉네임 또는 비밀번호가 올바르지 않아요.")
     return TokenRead(access_token=create_token(user.id), user=UserRead.model_validate(user))
+
+
+@app.post("/api/auth/reset-password", response_model=TokenRead)
+def reset_password(body: ResetPasswordRequest, session: Session = Depends(get_session)):
+    """닉네임 + 복구 코드로 비밀번호를 다시 정해요."""
+    user = session.exec(select(User).where(User.username == body.username.strip())).first()
+    code = normalize_code(body.recovery_code)
+
+    # 닉네임이 틀렸는지 코드가 틀렸는지 구분해서 알려주지 않아요 (계정 추측 방지)
+    if (
+        user is None
+        or user.recovery_code_hash is None
+        or not verify_password(code, user.recovery_code_hash)
+    ):
+        raise HTTPException(status_code=401, detail="닉네임 또는 복구 코드가 올바르지 않아요.")
+
+    # 쓴 코드는 버리고 새 코드를 발급해요 (한 번 쓰면 끝)
+    new_code = create_recovery_code()
+    user.password_hash = hash_password(body.new_password)
+    user.recovery_code_hash = hash_password(new_code)
+    session.commit()
+    session.refresh(user)
+    return TokenRead(
+        access_token=create_token(user.id),
+        user=UserRead.model_validate(user),
+        recovery_code=new_code,
+    )
+
+
+@app.post("/api/auth/change-password", response_model=TokenRead)
+def change_password(
+    body: ChangePasswordRequest,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """로그인한 상태에서 비밀번호 바꾸기."""
+    if not verify_password(body.current_password, current_user.password_hash):
+        raise HTTPException(status_code=401, detail="현재 비밀번호가 올바르지 않아요.")
+
+    current_user.password_hash = hash_password(body.new_password)
+    session.commit()
+    session.refresh(current_user)
+    return TokenRead(
+        access_token=create_token(current_user.id),
+        user=UserRead.model_validate(current_user),
+    )
 
 
 @app.get("/api/auth/me", response_model=UserRead)
@@ -188,3 +253,22 @@ def update_stage(
     session.commit()
     session.refresh(project)
     return ProjectRead.model_validate(project)
+
+
+# ---------- 모집글 삭제 : 글쓴이 본인만 ----------
+@app.delete("/api/projects/{project_id}", status_code=204)
+def delete_project(
+    project_id: int,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    project = get_project_or_404(session, project_id)
+    if project.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="이 트랙의 글쓴이만 삭제할 수 있어요.")
+
+    # 멤버 기록을 먼저 지워야 해요. (member 테이블이 project를 가리키고 있어서)
+    for member in list(project.members):
+        session.delete(member)
+    session.delete(project)
+    session.commit()
+    return None

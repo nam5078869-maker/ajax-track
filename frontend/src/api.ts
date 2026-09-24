@@ -44,6 +44,8 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
       typeof body?.detail === 'string' ? body.detail : '요청을 처리하지 못했어요. 입력값을 확인해 주세요.'
     throw new Error(message)
   }
+  // 204(본문 없음) 응답 처리
+  if (res.status === 204) return null as T
   return res.json() as Promise<T>
 }
 
@@ -51,6 +53,7 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
 export interface AuthResponse {
   accessToken: string
   user: User
+  recoveryCode?: string | null // 회원가입·비밀번호 재설정 때만 옵니다 (한 번만 보여줌)
 }
 
 export function signup(username: string, password: string) {
@@ -64,6 +67,13 @@ export function login(username: string, password: string) {
   return request<AuthResponse>('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({ username, password }),
+  })
+}
+
+export function resetPassword(username: string, recoveryCode: string, newPassword: string) {
+  return request<AuthResponse>('/api/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify({ username, recoveryCode, newPassword }),
   })
 }
 
@@ -97,6 +107,11 @@ export function createProject(input: NewBeatInput) {
     method: 'POST',
     body: JSON.stringify(input),
   })
+}
+
+export function deleteProject(projectId: number) {
+  // 204 No Content 응답이라 본문이 없어요.
+  return request<null>(`/api/projects/${projectId}`, { method: 'DELETE' })
 }
 
 export function updateStage(projectId: number, stage: number) {

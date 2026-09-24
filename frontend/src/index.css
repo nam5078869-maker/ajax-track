@@ -441,3 +441,36 @@ button { font-family: inherit; }
   /* 알림이 탭 바에 가리지 않게 */
   .toast { bottom: calc(76px + env(safe-area-inset-bottom)); width: max-content; max-width: 90%; text-align: center; }
 }
+
+/* ===== 삭제 버튼 / 확인 창 ===== */
+.card-actions { display: flex; gap: 8px; margin-top: 8px; }
+.card-actions .btn-outline { flex: 1; margin-top: 0; }
+.btn-outline.delete { flex: 0 0 auto; padding-left: 16px; padding-right: 16px; color: #999; }
+.btn-outline.delete:hover { background: #d00000; border-color: #d00000; color: #fff; }
+.btn.danger { background: #d00000; color: #fff; }
+.btn.danger:hover { background: #ef2b2b; }
+.confirm-message { color: #bbb; font-size: 14px; margin-top: 12px; }
+.modal .modal-actions { margin-top: 24px; }
+
+/* ===== 복구 코드 화면 ===== */
+.code-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0f0f0f;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 20px 0;
+}
+.code {
+  flex: 1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: var(--accent);
+  font-weight: 700;
+  word-break: break-all;
+}
+.code-box .btn-outline { margin-top: 0; padding: 10px 16px; }
+.auth-box .tabs .tab { font-size: 14px; padding: 10px 4px; }

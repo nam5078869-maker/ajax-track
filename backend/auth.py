@@ -1,5 +1,6 @@
 """로그인 관련 도구 모음: 비밀번호 해시, 토큰 발급·확인."""
 import os
+import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
@@ -27,6 +28,21 @@ def hash_password(password: str) -> str:
 
 def verify_password(password: str, password_hash: str) -> bool:
     return bcrypt.checkpw(password.encode(), password_hash.encode())
+
+
+# 헷갈리기 쉬운 글자(0/O, 1/I)는 빼고 만들어요.
+CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+
+
+def create_recovery_code() -> str:
+    """AJAX-XXXX-XXXX 형태의 1회용 복구 코드를 만든다."""
+    part = lambda: "".join(secrets.choice(CODE_ALPHABET) for _ in range(4))
+    return f"AJAX-{part()}-{part()}"
+
+
+def normalize_code(code: str) -> str:
+    """사용자가 소문자로 적거나 공백을 넣어도 알아보게 정리."""
+    return code.strip().upper().replace(" ", "")
 
 
 def create_token(user_id: int) -> str:

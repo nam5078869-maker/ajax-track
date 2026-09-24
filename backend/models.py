@@ -8,6 +8,8 @@ class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(unique=True, index=True)  # 동아리에서 쓰는 닉네임
     password_hash: str  # 비밀번호는 절대 그대로 저장하지 않고 해시로만 저장
+    # 비밀번호를 잊었을 때 쓰는 복구 코드. 이것도 해시로만 저장해요.
+    recovery_code_hash: str | None = Field(default=None)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
