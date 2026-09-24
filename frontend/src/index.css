@@ -345,3 +345,99 @@ button { font-family: inherit; }
   margin-top: 16px;
 }
 .team-actions .btn-outline { margin-top: 0; padding: 8px 16px; font-size: 14px; }
+
+/* ===== 넓은 화면 / 좁은 화면 공통 정리 ===== */
+.navbar { gap: 16px; }
+.nav-desktop { display: flex; gap: 24px; margin-left: auto; }
+.nav-desktop a { color: #aaa; }
+.nav-desktop a:hover { color: #fff; }
+.nav-desktop a.active { color: var(--accent); }
+.nav-auth { display: flex; align-items: center; gap: 12px; }
+.navbar .username { margin-left: 0; }
+.link-button { margin-left: 0; }
+
+/* 아래쪽 탭 바: 기본은 숨김 (넓은 화면) */
+.tabbar { display: none; }
+
+/* ===== 휴대폰 화면 (600px 이하) ===== */
+@media (max-width: 600px) {
+  /* 탭 바에 가리지 않도록 아래쪽 여백 확보 (env(...)는 아이폰 하단 바 영역) */
+  body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+
+  .navbar { padding: 14px 16px; }
+  .logo { font-size: 17px; }
+  .nav-desktop { display: none; }
+
+  .tabbar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    background: #141414;
+    border-top: 1px solid #2a2a2a;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tabbar a {
+    flex: 1;
+    text-align: center;
+    padding: 14px 4px;
+    font-size: 13px;
+    color: #888;
+  }
+  .tabbar a.active { color: var(--accent); font-weight: 700; }
+
+  /* 페이지 여백 줄이기 */
+  .page { padding: 24px 16px 40px; }
+  .steps { padding: 24px 16px 40px; }
+  .hero { padding: 56px 16px 48px; }
+  .hero h1 { font-size: 26px; }
+  .hero p { font-size: 15px; }
+
+  /* 제목과 버튼을 세로로 쌓고 버튼은 가로 전체 */
+  .page-head { flex-direction: column; align-items: stretch; gap: 12px; }
+  .page-head h1 { font-size: 26px; }
+  .page-head .btn { text-align: center; }
+
+  /* 장르 필터: 줄바꿈 대신 옆으로 밀어서 보기 */
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; padding: 8px 16px; }
+
+  /* 카드 한 줄에 하나씩 */
+  .card-grid { grid-template-columns: 1fr; }
+
+  /* 손가락으로 누르기 쉬운 크기 (최소 44px) */
+  .btn, .btn-outline, .tab { min-height: 44px; }
+
+  /* 진행 단계 바 */
+  .progress li { font-size: 11px; padding-top: 8px; }
+  .team { padding: 20px 16px; }
+  .team-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .team-actions { justify-content: stretch; flex-wrap: wrap; }
+  .team-actions .btn-outline { flex: 1; }
+
+  /* 입력 폼: 세로로 쌓기 */
+  .form-row { flex-direction: column; gap: 16px; }
+  .auth-box, .form-card { padding: 20px 16px; }
+
+  /* iOS에서 입력할 때 화면이 확대되지 않도록 16px 이상 유지 */
+  input, select, textarea { font-size: 16px !important; }
+
+  /* 신청 창을 화면 아래에서 올라오는 형태로 */
+  .modal-backdrop { align-items: flex-end; padding: 0; }
+  .modal {
+    max-width: none;
+    border-radius: 16px 16px 0 0;
+    padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  }
+
+  /* 알림이 탭 바에 가리지 않게 */
+  .toast { bottom: calc(76px + env(safe-area-inset-bottom)); width: max-content; max-width: 90%; text-align: center; }
+}
